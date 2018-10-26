@@ -23,7 +23,7 @@ const distPath = config.distPath
 function wxss(wxssFileList) {
   if (!wxssFileList.length) return false
 
-  return gulp.src(wxssFileList, {cwd: srcPath, base: srcPath})
+  return gulp.src(wxssFileList, {cwd: srcPath, base: srcPath, allowEmpty: true})
     .pipe(gulpif(wxssConfig.less && wxssConfig.sourcemap, sourcemaps.init()))
     .pipe(gulpif(wxssConfig.less, less({paths: [srcPath]})))
     .pipe(rename({extname: '.wxss'}))
@@ -80,7 +80,7 @@ function js(jsFileMap, scope) {
 function copy(copyFileList) {
   if (!copyFileList.length) return false
 
-  return gulp.src(copyFileList, {cwd: srcPath, base: srcPath})
+  return gulp.src(copyFileList, {cwd: srcPath, base: srcPath, allowEmpty: true})
     .pipe(_.logger())
     .pipe(gulp.dest(distPath))
 }
@@ -100,7 +100,7 @@ function install() {
     const demoDist = config.demoDist
     const demoPackageJsonPath = path.join(demoDist, 'package.json')
 
-    return gulp.src(demoPackageJsonPath)
+    return gulp.src(demoPackageJsonPath,{allowEmpty: true})
       .pipe(gulpInstall({production: true}))
   })
 }
@@ -139,7 +139,7 @@ class BuildTask {
         const demoSrc = config.demoSrc
         const demoDist = config.demoDist
 
-        return gulp.src('**/*', {cwd: demoSrc, base: demoSrc})
+        return gulp.src('**/*', {cwd: demoSrc, base: demoSrc, allowEmpty: true})
           .pipe(gulp.dest(demoDist))
       }
 
@@ -288,7 +288,7 @@ class BuildTask {
     gulp.task(`${id}-watch-demo`, () => {
       const demoSrc = config.demoSrc
       const demoDist = config.demoDist
-      const watchCallback = filePath => gulp.src(filePath, {cwd: demoSrc, base: demoSrc})
+      const watchCallback = filePath => gulp.src(filePath, {cwd: demoSrc, base: demoSrc, allowEmpty: true})
         .pipe(gulp.dest(demoDist))
 
       return gulp.watch('**/*', {cwd: demoSrc, base: demoSrc})

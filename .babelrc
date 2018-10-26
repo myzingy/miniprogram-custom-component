@@ -4,8 +4,13 @@
             "root": ["./src"],
             "alias": {}
         }]
+
     ],
     "presets": [
-        ["env", {"loose": true, "modules": "commonjs"}]
+        ["env",{
+            "loose": true,
+            "modules": "commonjs"
+        }]
+        ,"stage-3"
     ]
 }

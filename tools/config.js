@@ -8,11 +8,11 @@ const isWatch = process.argv.indexOf('--watch') >= 0
 const demoSrc = path.resolve(__dirname, './demo')
 const demoDist = path.resolve(__dirname, '../miniprogram_dev')
 const src = path.resolve(__dirname, '../src')
-const dev = path.join(demoDist, 'components')
+const dev = path.join(demoDist, 'components/wxk')
 const dist = path.resolve(__dirname, '../miniprogram_dist')
 
 module.exports = {
-  entry: ['index'],
+  entry: ['index','nav'],
 
   isDev,
   isWatch,
@@ -40,7 +40,7 @@ module.exports = {
         test: /\.js$/i,
         use: [
           'babel-loader',
-          'eslint-loader'
+          //'eslint-loader'
         ],
         exclude: /node_modules/
       }],
