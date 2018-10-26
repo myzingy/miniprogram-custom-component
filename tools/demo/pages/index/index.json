@@ -1,5 +1,7 @@
 {
   "usingComponents": {
-    "nav": "../../components/wxk/nav"
+    "line": "/components/wxk/line",
+    "nav": "/components/wxk/nav",
+    "formids": "/components/wxk/formids"
   }
 }

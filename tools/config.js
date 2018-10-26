@@ -12,7 +12,7 @@ const dev = path.join(demoDist, 'components/wxk')
 const dist = path.resolve(__dirname, '../miniprogram_dist')
 
 module.exports = {
-  entry: ['index','nav'],
+  entry: ['index','nav','line','formids'],
 
   isDev,
   isWatch,

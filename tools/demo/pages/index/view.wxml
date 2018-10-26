@@ -1,0 +1,5 @@
+<!--miniprogram/pages/index/view.wxml-->
+<nav home="/pages/index/index" backgroundColor="#ff0" color="#f00">VKTOOL NAV</nav>
+<view class="page">
+    view page
+</view>

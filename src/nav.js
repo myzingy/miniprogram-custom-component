@@ -17,6 +17,10 @@ Component({
         type:Boolean,
           value:false
       },
+    home:{
+      type:String,
+      value:'',
+    }
   },
 
   /**
@@ -36,12 +40,14 @@ Component({
    */
   methods: {
     back(){
-      //wx.navigateBack()
-      this.triggerEvent('back');
+      wx.navigateBack()
     },
       home(){
         if(!this.data.disHome) return;
-        this.triggerEvent('home');
+        //this.triggerEvent('home');
+        wx.reLaunch({
+          url:this.data.home
+        });
       },
       async init(){
         let wxBarHeight=68;
@@ -52,8 +58,12 @@ Component({
         if (pages.length > 1) {
             disBack = true;
         }
-        if (this.data.hasHome) {
+        if (this.data.home) {
           disHome = true;
+          if(this.data.home.indexOf(pages[pages.length-1].route)>-1){
+            disBack = false;
+            disHome = false;
+          }
         }
         let statusBarHeight=40;
         try{
