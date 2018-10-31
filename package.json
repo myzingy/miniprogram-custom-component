@@ -1,7 +1,7 @@
 {
-  "name": "miniprogram-custom-component",
+  "name": "vktool",
   "version": "1.0.0",
-  "description": "",
+  "description": "wechat nav,formids and js help",
   "main": "miniprogram_dist/index.js",
   "scripts": {
     "dev": "gulp dev --develop",
@@ -31,7 +31,7 @@
     "type": "git",
     "url": "https://github.com/wechat-miniprogram/miniprogram-custom-component.git"
   },
-  "author": "wechat-miniprogram",
+  "author": "vking",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.1.2",
