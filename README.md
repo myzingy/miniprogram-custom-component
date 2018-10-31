@@ -1,121 +1,233 @@
-# miniprogram-custom-component
+# vktool
+使用小程序组件方式提供快捷开发方式，提高开发效率；
+##安装
+npm install vktool
+## 基本使用：推荐使用方式1
+### 使用方式1，直接注入 app.js 中
+直接注入到app.js 中，之后通过getApp()方式调用；
+#### 第一步 在 app.js 引入
+````
+// app.js
+var {vk,regeneratorRuntime} = requirePlugin("myPlugin")
+App({
+  ...vk,
+  regeneratorRuntime:regeneratorRuntime,
+  onLaunch: function () {
+      this.config({
+          requst:{
+            ret:'code',
+              code:0,
+          }
+      })
+  },
+  onHide(){
+      this.cache_clear()
+  }
+})
+````
+#### 第二步 在页面中调用
+````
+// pages/order/list.js
+const {regeneratorRuntime} = getApp()
+Page({
+  onLoad: async function() {
+    console.log(getApp());
+    getApp().cache('cache.over','默认是永久缓存');
+    getApp().cache('cache.timeout.5min',{tip:'第三参数是过期时间，单位秒，5分钟就传300'},300);
+    let data= await getApp().cache('cache.over');
+    console.log('data',data);
+    getApp().requst({
+        url:'https://www.test.com/?s=App.Reserve.SellerInfo',
+        data:{
+            seller_id:1,
+            seller_openid:'o9pcQ0cbjRKnRWczcOJaaSRGP1lE',
+            manager_id:500
+        }
+    })
+  }
+})
+````
 
-小程序自定义组件脚手架
+### 使用方式2，只在具体页面中单独使用
+在单个 Page 中引入使用，如 /pages/order/list.js中 
+````
+// pages/order/list.js
+var {vk,regeneratorRuntime} = requirePlugin("myPlugin")
+Page({
+  onLoad: async function() {
+    console.log(vk);
+    vk.cache('cache.over','默认是永久缓存');
+    vk.cache('cache.timeout.5min',{tip:'第三参数是过期时间，单位秒，5分钟就传300'},300);
+    let data= await vk.cache('cache.over');
+    console.log('data',data);
+    vk.requst({
+        url:'https://www.test.com/?s=App.Reserve.SellerInfo',
+        data:{
+            seller_id:1,
+            seller_openid:'o9pcQ0cbjRKnRWczcOJaaSRGP1lE',
+            manager_id:500
+        }
+    })
+  }
+})
+````
 
-## 开发
+# helper 函数
 
-1. 安装依赖：
+###以下函数根据引用方式，可以通过 getApp() 或 vk 进行调用
 
-```
-npm install
-```
+# date_format(ns,format='YYYY年MM月DD日')
+将时间戳（整型10位）格式化为format中定义的格式
 
-2. 执行命令：
+format 指令如下：
+ YYYY年 MM月 DD日 HH时 II分 SS秒 WEEK周几 DAY(今天/明天/日期)
+ 
+ 示例 
+ 
+     getApp().date_format(1539588251,'MM-DD HH:II')  //10-15 15:24
+     
+     getApp().date_format(1539588251,'周WEEK MM-DD HH:II')  //周一 10-15 15:24 
+     
+     getApp().date_format(1539588251,'\`DAY/MM-DD\` HH:II')  //今天 15:24  
+     getApp().date_format(1542266651,'\`DAY/MM-DD\` HH:II')  //11-15 15:24 
+     
+     \`DAY/MM-DD\` 会计算是不是今天或明天，如果不是，则使用MM-DD
+ 
+### strtotime
+将 日期时间串 转化为时间戳（整型10位）
+getApp().strtotime('2018-11-15 15:24:11') //1542266651
+getApp().strtotime('2018/11/15 15:24:11') //1542266651
 
-```
-npm run dev
-```
+### time
+获取当前时间戳
+getApp().time() //1542266651
 
-默认会在包根目录下生成 miniprogram\_dev 目录，src 中的源代码会被构建并生成到 miniprogram\_dev/components 目录下。如果需要监听文件变化动态构建，则可以执行命令：
+### toast(msg,icon='none')
+getApp().toast('提示信息')   //wx.showToast 的封装
 
-```
-npm run watch
-```
+### cache(key,value,timeout=-1)  
+    带有过期时间的异步存储，需要使用await then 方式；timeout单位是秒， 默认-1为永久存储
 
-> ps: 如果 minirpogram\_dev 目录下已存在小程序 demo，执行`npm run dev`则不会再将 tools 下的 demo 拷贝到此目录下。而执行`npm run watch`则会监听 tools 目录下的 demo 变动并进行拷贝。
+ 保存信息： 
+ 
+     cache('键值','数据',600)//保存10分钟，10分钟后失效
+     cache('键值','数据').then(res=>{})
+     await cache('键值','数据')
+ 
+ 读取信息：
+ 
+1. 使用then
+    ````
+    getApp().cache('键值').then(data=>{
+        console.log(data) //数据
+    }).catch(res=>{
+        //没有找到'键值'对应的数据或数据已失效
+    })
+    ````
+2. 使用await
+    ````
+    try{
+        let d=await getApp().cache('键值');
+        console.log(data) //数据
+    }catch(e){}
+    ````
+    
+### cache_clear
+    请将此函数放在 app.js onHide 中，自动清理过期缓存，防止垃圾缓存造成系统负担
+    目前wx组件接口不支持getStorageInfo，无法正常工作
+    
+### val(e)
+    获取 input/textarea 值，e必须是bind事件传入的event 
+   
+### attr(e,key="")
+    获取 dom 上自定义的data-key="value" 的值，e必须是bind事件传入的event，key 就是 data-key 后面的key，key为空时，返回所有自定义的 data 的键值对数据；
+    
+### http_build_query(param,url='')
+     将 param 键值对拼接成 url 参数，如 key1=val1&key2=val2
+     如果传递了 url，则会拼接 url?key1=val1&key2=val2,
+     如果 url中已经有 ? 则自动变为 url&key1=val1&key2=val2
+     
+### promise(wxapi,param={})
+    微信api promise化，可以使用 then 或 await 进行处理,param 微信api所要传递的参数
+    如：网络请求
+    getApp().promise('wx.request',{
+        url:'https://www.test.com/api',
+        data:{p:1}
+    }).then(res=>{
+        console.log(res)
+    });
+    
+    如：获得系统信息
+    let sys= await getApp().promise('getSystemInfo');
+    console.log(sys)
+   
+### requst(param,fouce=false)   
+    网络请求的封装，实现了
+        自动缓存，缓存未失效时，直接使用缓存数据；
+        loading 效果，可以通过 config 自定义
+        全局错误处理，需要通过 config 配置
+网络请求        
+````
+getApp().requst({
+    url:'https://www.test.com/?s=App.Reserve.SellerInfo',
+    data:{
+        seller_id:1,
+        seller_openid:'o9pcQ0cbjRKnRWczcOJaaSRGP1lE',
+        manager_id:500
+    }
+    //支持 wx.requst 所有参数，以下为扩展参数
+    
+    loading:true,   //显示loading效果，默认不显示
+    timeout:600,    //缓存十分钟，默认不缓存，-1为永久缓存
+    
+}).then(res=>{
+    console.log(res);
+})
+````
+### config(conf={})
+    配置插件，处理数据更加灵活,conf 参数请查看源码说明    
+    
 
-3. 生成的 miniprogram\_dev 目录是一个小程序项目目录，以此目录作为小程序项目目录在开发者工具中打开即可查看自定义组件被使用的效果。
+## 组件库
+在 Page json中引入组件,用那个就引用那个
+````
+"usingComponents": {
+    "line": "plugin://myPlugin/line",
+    "nav": "plugin://myPlugin/nav",
+    "formids": "plugin://myPlugin/formids"
+}
+````
+### line
+分割线
+````
+<line>分割线</line>
+````
+![链接](./docs/line.jpeg)
+### nav
+````
+<nav bindback="goBack" hasHome 
+    bindhome="goHome" 
+    backgroundColor="#ff0" 
+    color="#f00">VKTOOL NAV</nav>
+````
+![链接](./docs/nav.jpeg)
+### formids
+#####为了收集 formid，此组件在点击时会保存 formid 到本地缓存，key为formids
 
-4. 进阶：
-
-* 如果有额外的构建需求，可自行修改 tools 目录中的构建脚本。
-* 内置支持 less、sourcemap 等功能，默认关闭。如若需要可以自行修改 tools/config.js 配置文件中相关配置。
-* 内置支持多入口构建，如若需要可自行调整 tools/config.js 配置文件的 entry 字段。
-* 默认开启 eslint，可自行调整规则或在 tools/config.js 中注释掉 eslint-loader 行来关闭此功能。
-
-## 发布
-
-> ps: 发布前得确保已经执行构建，小程序 npm 包只有构建出来的目录是真正被使用到的。
-
-1. 如果还没有 npm 帐号，可以到[ npm 官网](https://www.npmjs.com/)注册一个 npm 帐号。
-2. 在本地登录 npm 帐号，在本地执行：
-
-```
-npm adduser
-```
-
-或者
-
-```
-npm login
-```
-
-3. 在已完成编写的 npm 包根目录下执行：
-
-```
-npm publish
-```
-
-到此，npm 包就成功发布到 npm 平台了。
-
-> PS：一些开发者在开发过程中可能修改过 npm 的源，所以当进行登录或发布时需要注意要将源切回 npm 的源。
-
-## 目录结构
-
-以下为推荐使用的目录结构，如果有必要开发者也可以自行做一些调整:
-
-```
-|--miniprogram_dev // 开发环境构建目录
-|--miniprogram_dist // 生产环境构建目录
-|--src // 源码
-|   |--common // 通用 js 模块
-|   |--components // 通用自定义组件
-|   |--images // 图片资源
-|   |--wxml // 通用 wxml 模版资源
-|   |--wxs // 通用 wxs 资源
-|   |--wxss // 通用 wxss 资源
-|   |
-|   |--xxx.js/xxx.wxml/xxx.json/xxx.wxss // 暴露的 js 模块/自定义组件入口文件
-|
-|--test // 测试用例
-|--tools // 构建相关代码
-|   |--demo // demo 小程序目录，开发环境下会被拷贝生成到 miniprogram_dev 目录中
-|   |--test // 测试工具相关目录
-|   |--config.js // 构建相关配置文件
-|
-|--gulpfile.js
-```
-
-> PS：对外暴露的 js 模块/自定义组件请放在 src 目录下，不宜放置在过深的目录。另外新增的暴露模块需要在 tools/config.js 的 entry 字段中补充，不然不会进行构建。
-
-## 测试
-
-* 执行测试用例：
-
-```
-npm run test
-```
-
-* 检测覆盖率：
-
-```
-npm run coverage
-```
-
-测试用例放在 test 目录下，其中 test/utils 是已封装好可在测试用例中使用的工具包，具体使用文档请[点击此处查看](./docs/test.md)。在测试中可能需要用到官方提供的一些接口（如`wx.getSystemInfo`），可在 test/utils 下自行模拟实现（里面已内置部分模拟接口）。
-
-> 目前测试框架仍有部分自定义组件的功能不支持（可参考测试工具包使用文档中的 TODO 列表），后续会逐步进行支持。
-
-## 其他命令
-
-* 清空 miniprogram_dist 目录：
-
-```
-npm run clean
-```
-
-* 清空 miniprogam_dev 目录：
-
-```
-npm run clean-dev
-```
+`由于微信组件的导航事件，
+    wx.redirectTo、
+    wx.navigateTo、
+    wx.navigateBack
+    都有bug，跳不动，只能按第一种事件写法`
+    
+````
+<formids bindclick="navigateGo">
+    <view class="link">绑定事件方式跳到 view 页面</view>
+</formids>
+<formids url="./view" openType="navigate">
+    <view class="link">navigate view 页面</view><view>(组件wx.navigateTo有bug，跳不动)</view>
+</formids>
+<formids url="./view" openType="redirect">
+    <view class="link">redirect view 页面</view><view>(组件wx.redirectTo有bug，跳不动)</view>
+</formids>
+````

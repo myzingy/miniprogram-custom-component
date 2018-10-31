@@ -1,6 +1,6 @@
 {
   "name": "vktool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "wechat nav,formids and js help",
   "main": "miniprogram_dist/index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wechat-miniprogram/miniprogram-custom-component.git"
+    "url": "https://github.com/myzingy/wx-vktool.git"
   },
   "author": "vking",
   "license": "MIT",
