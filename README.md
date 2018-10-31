@@ -1,14 +1,15 @@
 # vktool
 使用小程序组件方式提供快捷开发方式，提高开发效率；
 ##安装
-npm install vktool
+1. npm install vktool --production
+2. 微信开发工具  工具-》构建npm
 ## 基本使用：推荐使用方式1
 ### 使用方式1，直接注入 app.js 中
 直接注入到app.js 中，之后通过getApp()方式调用；
 #### 第一步 在 app.js 引入
 ````
 // app.js
-import {vk,regeneratorRuntime} from 'components/vk/index'
+import {vk,regeneratorRuntime} from 'vktool'
 App({
   ...vk,
   regeneratorRuntime:regeneratorRuntime,
@@ -55,7 +56,7 @@ Page({
 在单个 Page 中引入使用，如 /pages/order/list.js中 
 ````
 // pages/order/list.js
-import {vk,regeneratorRuntime} from 'components/vk/index'
+import {vk,regeneratorRuntime} from 'vktool'
 Page({
   onLoad: async function() {
     console.log(vk);
