@@ -49,4 +49,13 @@
         </formids>
 
     </view>
+
+    <view class="item">
+        <line>网络请求</line>
+        <view>封装了网络请求，可以缓存数据，再次访问加速读取</view>
+        <formids url="./ai" openType="navigate">
+            <view class="link">网络请求demo</view>
+        </formids>
+
+    </view>
 </view>

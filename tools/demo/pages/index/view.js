@@ -43,15 +43,4 @@ Page({
   onUnload: function () {
 
   },
-
-  goBack(){
-    wx.navigateBack()
-  },
-
-  goHome(e){
-    console.log(e)
-    wx.reLaunch({
-      url:'/pages/index/index'
-    })
-  },
 })

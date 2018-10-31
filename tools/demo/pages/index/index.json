@@ -1,7 +1,7 @@
 {
   "usingComponents": {
-    "line": "/components/wxk/line",
-    "nav": "/components/wxk/nav",
-    "formids": "/components/wxk/formids"
+    "line": "/components/vk/line",
+    "nav": "/components/vk/nav",
+    "formids": "/components/vk/formids"
   }
 }

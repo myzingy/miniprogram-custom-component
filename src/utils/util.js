@@ -76,29 +76,41 @@ function strtotime(datestr)
 
 module.exports = {
     _config:{
-        requst:{
-            method:'POST',
-            dataType:'json',
-            header:{
+      request:{
+        method:'POST',
+        dataType:'json',
+        header:{
 
-            },
-            statusKey:'Response',//Response 则使用网络请求状态判断，其它值则使用res.StatusKey 进行判断
-            statusCode:200, //正常返回结果 StatusKey的值 == StatusCode 视为正常结果
+        },
+        responseKey:'Response', //Response 则使用网络请求状态判断，其它值则使用res.StatusKey 进行判断
+        responseCode:200,   //正常返回结果 StatusKey的值 == StatusCode 视为正常结果
 
-            msgKey:'msg',   //错误信息的key
-            infoCode:201,   //一般性 toast 提示信息，如字段必填等
-            errorCode:-1,  //严重错误，如登录超时
-            infoFun:(res)=>{
-                this.toast(res[this._config.requst.msgKey])
-            },
-            errorFun:(res=>{
-                this.toast(res[this._config.requst.msgKey])
-            }),
+        responseKeyData:'data',   //错误信息的key
+        responseKeyMsg:'msg',   //错误信息的key
+        responseCodeError:400,   //一般性错误 toast 提示信息，如字段必填等
+        responseCodeCrash:500,  //严重错误，如登录超时
+        infoFun:(res)=>{
+            this.toast(res[this._config.request.responseKeyMsg])
+        },
+        errorFun:(res)=>{
+            this.toast(res[this._config.request.responseKeyMsg])
+        },
+        loading:(flag=true)=>{
+            if(flag){
+              wx.showLoading({
+                title: 'loading',
+                mask:true
+              })
+            }else{
+                wx.hideLoading()
+            }
+
         }
+      }
     },
     config(conf){
         Object.keys(conf).forEach(key=>{
-            this._config[key]={...conf[key],...this._config[key]}
+            this._config[key]={...this._config[key],...conf[key]}
         })
     },
     date_format: date_format,
@@ -140,7 +152,8 @@ module.exports = {
             let cache=await this.promise('wx.getStorage',{
                 key:key,
             })
-            if(cache.data){
+            //console.log('cache',cache.data,cache.data.timeout>this.time())
+            if(cache.data.data){
                 if(cache.data.timeout==-1 || cache.data.timeout>this.time()){
                     return cache.data.data;
                 }
@@ -197,11 +210,11 @@ module.exports = {
     promise(wxapi,param={}){
         return new Promise(function(success,fail){
             param.success=function(res){
-                console.log(wxapi+'.success',param,res)
+                //console.log(wxapi+'.success',param,res)
                 success(res)
             }
             param.complete=function(res){
-                console.log(wxapi+'.complete',param,res)
+                //console.log(wxapi+'.complete',param,res)
             }
             param.fail=function(res){
                 console.log(wxapi+'.fail',param,res)
@@ -222,31 +235,83 @@ module.exports = {
      * @param fouce
      * @returns {*}
      */
-    async requst(param,fouce=false){
-        let requst_url=this.http_build_query(param.data||{},param.url);
-        let cache_key=requst_url.replace(/http.*\//,'');
-        console.log('requst.url',requst_url,cache_key)
+    async request(param,fouce=false){
+        if(param.loading && (fouce!='clear' && fouce!='clean')){
+          this._config.request.loading()
+        }
+        let request_url=this.http_build_query(param.data||{},param.url);
+        let cache_key=request_url.replace(/http.*\//,'');
+        //console.log('request.url',request_url,cache_key)
         if(fouce=='clear' || fouce=='clean'){
             return this.promise('wx.removeStorage',{key:cache_key})
         }
         let cache_data=false;
         if(!fouce){//从缓存中获取
             try {
-                cache_data= await this.promise('wx.getStorage',{key:cache_key})
+                cache_data= await this.cache(cache_key)
                 if(cache_data) {
-                    cache_data.isCache=true;
+                    if(typeof cache_data=='object'){
+                      cache_data.isCache=true;
+                    }
+                      if(param.loading){
+                        this._config.request.loading(false)
+                      }
+                  console.log(request_url,cache_data);
                     return cache_data;
                 }
-            }catch (e){}
+            }catch (e){
+                console.log('cache_data',e)
+            }
 
         }
         let res=await this.promise('wx.request',param);
-        if(this._config[`request.statusKey`]=='Response'){
+
+      if(this._config.request.responseKey=='Response'){
+          if(res.data[this._config.request.responseKeyData] && (param.timeout>0 || param.timeout==-1)){
+            this.cache(cache_key,res.data,param.timeout)
+          }
+        }else{
+            if(res.data[this._config.request.responseKey]==this._config.request.responseCode
+                && res.data[this._config.request.responseKeyData]
+                && (param.timeout>0 || param.timeout==-1)
+            ){
+                this.cache(cache_key,res.data,param.timeout)
+            }
 
         }
+      if(param.loading){
+        this._config.request.loading(false)
+      }
+      console.log(request_url,res.data);
+        return res.data;
+    },
+  /**
+   * 刷新当前页面
+    * @param flag
+   */
+  refresh(flag=false){
+      let pages=getCurrentPages();
+      let p=pages[pages.length-1];
+      let param=[];
+      if(p.options){
+        for(let key in p.options){
+          param.push(key+'='+(p.options[key]
+              .replace(/=/,'%3D').replace(/&/,'%26')))
+        }
+      }
+      let url='/'+p.route+'?'+param.join('&')
+      console.log('reLaunch',url)
+      if(flag){
+        wx.reLaunch({
+          url: url
+        })
+      }else{
+          wx.redirectTo({
+            url:url
+          })
+      }
 
-
-    }
+  }
 }
 
 
