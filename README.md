@@ -8,20 +8,23 @@ npm install vktool
 #### 第一步 在 app.js 引入
 ````
 // app.js
-var {vk,regeneratorRuntime} = requirePlugin("myPlugin")
+import {vk,regeneratorRuntime} from 'components/vk/index'
 App({
   ...vk,
   regeneratorRuntime:regeneratorRuntime,
   onLaunch: function () {
-      this.config({
-          requst:{
-            ret:'code',
-              code:0,
-          }
-      })
+    this.config({
+      request:{
+        responseKey:'Response', //Response 则使用网络请求状态判断，其它值则使用res.StatusKey 进行判断
+        responseCode:200,   //正常返回结果 StatusKey的值 == StatusCode 视为正常结果
+
+        responseKeyData:'content',   //错误信息的key
+        responseKeyMsg:'msg',   //错误信息的key
+      }
+    })
   },
   onHide(){
-      this.cache_clear()
+    this.cache_clear()
   }
 })
 ````
@@ -52,7 +55,7 @@ Page({
 在单个 Page 中引入使用，如 /pages/order/list.js中 
 ````
 // pages/order/list.js
-var {vk,regeneratorRuntime} = requirePlugin("myPlugin")
+import {vk,regeneratorRuntime} from 'components/vk/index'
 Page({
   onLoad: async function() {
     console.log(vk);
@@ -185,8 +188,55 @@ getApp().requst({
 })
 ````
 ### config(conf={})
-    配置插件，处理数据更加灵活,conf 参数请查看源码说明    
-    
+    配置插件，处理数据更加灵活,conf 默认参数如下
+````
+{
+    request:{
+        method:'POST',
+        dataType:'json',
+        header:{
+        
+        },
+        responseKey:'Response', //Response 则使用网络请求状态判断，其它值则使用res.responseKey 进行判断
+        responseCode:200,   //正常返回结果 responseKey的值 == responseCode 视为正常结果
+        
+        responseKeyData:'data',   //错误信息的key
+        responseKeyMsg:'msg',   //错误信息的key
+        responseCodeError:400,   //一般性错误 toast 提示信息，如字段必填等
+        responseCodeCrash:500,  //严重错误，如登录超时
+        infoFun:(res)=>{
+            this.toast(res[this._config.request.responseKeyMsg])
+        },
+        errorFun:(res)=>{
+            this.toast(res[this._config.request.responseKeyMsg])
+        },
+        loading:(flag=true)=>{
+            if(flag){
+              wx.showLoading({
+                title: 'loading',
+                mask:true
+              })
+            }else{
+                wx.hideLoading()
+            }
+        
+        }
+    }
+}
+
+
+````       
+    需要自定义的重写掉就行，其它字段会使用默认值，如：
+````
+this.config({
+  request:{
+    responseKey:'Response', 
+    responseCode:200,   
+    responseKeyData:'content',   //错误信息的key
+    responseKeyMsg:'msg',   //错误信息的key
+  }
+})
+````    
 
 ## 组件库
 在 Page json中引入组件,用那个就引用那个
