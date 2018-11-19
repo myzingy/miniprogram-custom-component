@@ -1,5 +1,5 @@
 <!--pages/index/ai.wxml-->
-<nav home="/pages/index/index" backgroundColor="#ff0" color="#f00">网络请求</nav>
+<nav home="/pages/index/index" backgroundColor="#ff0" color="#f00">request 加强版</nav>
 <view class="page">
     <view class="flex-lr">
         <view>

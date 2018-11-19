@@ -18,7 +18,6 @@ import util from './util'
 function rpc(url,data={},fouce=false,req={}){
   req.url=url
   req.data=data
-  req.loading=req.silence===false?true:false
   return util.request(req)
 }
 function __api(uri){
