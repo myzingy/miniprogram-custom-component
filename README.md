@@ -1,7 +1,6 @@
 # vktool
 使用小程序组件方式提供快捷开发方式，提高开发效率；
-
-##安装
+## 安装
 1. npm install vktool --production
 2. 微信开发工具  工具-》构建npm
 ## 基本使用：推荐使用方式1
@@ -79,7 +78,7 @@ Page({
 
 # helper 函数
 
-###以下函数根据引用方式，可以通过 getApp() 或 vk 进行调用
+### 以下函数根据引用方式，可以通过 getApp() 或 vk 进行调用
 
 # date_format(ns,format='YYYY年MM月DD日')
 将时间戳（整型10位）格式化为format中定义的格式
@@ -363,3 +362,8 @@ getApp().ApiOneTwo({key:'free',
     <view class="link">redirect view 页面</view><view>(组件wx.redirectTo有bug，跳不动)</view>
 </formids>
 ````
+
+### todo
+1. 请求头 header 中加 formids
+2. 请求出错的处理逻辑实现
+3. 请求结果的细化处理
