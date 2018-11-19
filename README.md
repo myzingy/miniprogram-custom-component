@@ -344,12 +344,6 @@ getApp().ApiOneTwo({key:'free',
 ![链接](./docs/nav.jpeg)
 ### formids
 #####为了收集 formid，此组件在点击时会保存 formid 到本地缓存，key为formids
-
-`由于微信组件的导航事件，
-    wx.redirectTo、
-    wx.navigateTo、
-    wx.navigateBack
-    都有bug，跳不动，只能按第一种事件写法`
     
 ````
 <formids bindclick="navigateGo">
@@ -363,7 +357,11 @@ getApp().ApiOneTwo({key:'free',
 </formids>
 ````
 
-### todo
+### Todo
+
 1. 请求头 header 中加 formids
 2. 请求出错的处理逻辑实现
 3. 请求结果的细化处理
+
+### 请我喝茶
+![链接](./docs/wxpay.jpg)|![链接](./docs/alipay.png)
