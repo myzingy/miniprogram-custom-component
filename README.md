@@ -1,5 +1,6 @@
 # vktool
 使用小程序组件方式提供快捷开发方式，提高开发效率；
+
 ##安装
 1. npm install vktool --production
 2. 微信开发工具  工具-》构建npm
