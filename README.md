@@ -1,8 +1,11 @@
 # vktool
 
 使用小程序组件方式提供快捷开发方式，提高开发效率；虽然只是组件，但提供框架级服务。
+
 微信小程序原生开发越来越方便，部分框架更新慢，很难满足快速变化的小程序；
+
 **所以以组件方式切入，提供辅助函数及常用组件；**
+
 ~~（之前有以小程序插件方式切入的方式，但由于插件本身wx接口不能完全开放，所以放弃了）~~
 
 ## 接口功能
@@ -31,10 +34,10 @@ val | 获取 input/textarea 值，e必须是bind事件传入的event
 attr | 获取 dom 上自定义的data-key="value" 的值
 ---------------- | --------------
 
-http_build_query | 将 param 键值对拼接成 url 参数，如 key1=val1key2=val2
+http_build_query | 将 param 键值对拼接成 url 参数，如 key1=val1&key2=val2
 ---------------- | --------------
 
-promise | 微信api promise化，可以使用 then 或 await 进行处理
+promise | 微信 api 简单 promise化，可以使用 then 或 await 进行处理
 ---------------- | --------------
 
 request | 网络请求的封装，实现了自动缓存，缓存未失效时，直接使用缓存数据等
@@ -202,8 +205,7 @@ getApp().time() //1542266651
     ````
     
 > ### cache_clear
-    请将此函数放在 app.js onHide 中，自动清理过期缓存，防止垃圾缓存造成系统负担
-    目前wx组件接口不支持getStorageInfo，无法正常工作
+> 请将此函数放在 app.js onHide 中，自动清理过期缓存，防止垃圾缓存造成系统负担
     
 > ### val(e)
 > 获取 input/textarea 值，e必须是bind事件传入的event 
@@ -217,7 +219,7 @@ getApp().time() //1542266651
      如果 url中已经有 ? 则自动变为 url&key1=val1&key2=val2
      
 > ### promise(wxapi,param={})
-    微信api promise化，可以使用 then 或 await 进行处理,param 微信api所要传递的参数
+    微信 api 简单 promise 化，可以使用 then 或 await 进行处理,param 微信api所要传递的参数
     如：网络请求
     getApp().promise('wx.request',{
         url:'https://www.test.com/api',
@@ -247,14 +249,14 @@ getApp().requst({
     //支持 wx.requst 所有参数，以下为扩展参数
     
     loading:true,   //显示loading效果，默认不显示
-    timeout:600,    //缓存十分钟，默认不缓存，-1为永久缓存
+    cachetime:600,    //缓存十分钟，默认不缓存，-1为永久缓存
     
 }).then(res=>{
     console.log(res);
 })
 ````
 > ### config(conf={})
-> 配置插件，处理数据更加灵活,conf 默认参数如下
+> 配置组件，处理数据更加灵活,conf 默认参数如下
 ````
 {
     request:{
@@ -304,10 +306,11 @@ this.config({
 })
 ````    
 > ### 网络请求 增强版
-
-    直接使用 getApp().requst 要写一个标准的 url，多个页面调用一个接口无法复用请求，接口很多时不方便管理，接口变更更是麻烦的修改；所以这个增强版是在 getApp().requst 基础上做个一次封装，可以对接口进行配置及统一管理
+    直接使用 getApp().requst 要写一个标准的 url，多个页面调用一个接口无法复用请求，
+    接口很多时不方便管理，接口变更更是麻烦的修改；
+    所以这个增强版是在 getApp().requst 基础上做个一次封装，可以对接口进行配置及统一管理
     
-    需要按以下流程实现：
+需要按以下流程实现：
 #### 1）根目录创建 request 目录，创建2个文件
 
 ````
