@@ -365,4 +365,4 @@ getApp().ApiOneTwo({key:'free',
 
 ### 请我喝茶
 
-|![链接](./docs/wxpay.jpg)|![链接](./docs/alipay.png)|
+| ![链接](./docs/wxpay.jpg) | ![链接](./docs/alipay.png) |
