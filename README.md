@@ -1,10 +1,73 @@
 # vktool
-使用小程序组件方式提供快捷开发方式，提高开发效率；
+
+使用小程序组件方式提供快捷开发方式，提高开发效率；虽然只是组件，但提供框架级服务。
+微信小程序原生开发越来越方便，部分框架更新慢，很难满足快速变化的小程序；
+**所以以组件方式切入，提供辅助函数及常用组件；**
+~~（之前有以小程序插件方式切入的方式，但由于插件本身wx接口不能完全开放，所以放弃了）~~
+
+## 接口功能
+
+接口 | 描述 
+---------------- | --------------
+
+date_format | 将时间戳（整型10位）格式化为format中定义的格式
+---------------- | --------------
+
+strtotime | 时间串转为时间戳
+---------------- | --------------
+
+time | 时间串转为时间戳
+---------------- | --------------
+
+toast | wx.showToast 的封装 
+---------------- | --------------
+
+cache | 带有过期时间的异步存储
+---------------- | --------------
+
+val | 获取 input/textarea 值，e必须是bind事件传入的event 
+---------------- | --------------
+
+attr | 获取 dom 上自定义的data-key="value" 的值
+---------------- | --------------
+
+http_build_query | 将 param 键值对拼接成 url 参数，如 key1=val1key2=val2
+---------------- | --------------
+
+promise | 微信api promise化，可以使用 then 或 await 进行处理
+---------------- | --------------
+
+request | 网络请求的封装，实现了自动缓存，缓存未失效时，直接使用缓存数据等
+---------------- | --------------
+
+refresh | 刷新当前页面
+---------------- | --------------
+
+cache_clear | 清理过期缓存
+---------------- | --------------
+
+config | 全局配置参数
+---------------- | --------------
+
+## 组件功能
+
+名称 | 描述 
+---------------- | --------------
+
+nav | 自定义顶部导航 
+---------------- | --------------
+
+line | 一条带有文字的分割线 
+---------------- | --------------
+
+formids | 自动收集formid 放入本地存储中 
+---------------- | --------------
+
 ## 安装
-1. npm install vktool --production
+1. ` npm install vktool --production `
 2. 微信开发工具  工具-》构建npm
-## 基本使用：推荐使用方式1
-### 使用方式1，直接注入 app.js 中
+## 基本使用：推荐使用方式 1
+### 使用方式 1，直接注入 app.js 中
 直接注入到app.js 中，之后通过getApp()方式调用；
 #### 第一步 在 app.js 引入
 ````
@@ -52,7 +115,7 @@ Page({
 })
 ````
 
-### 使用方式2，只在具体页面中单独使用
+### 使用方式 2，只在具体页面中单独使用
 在单个 Page 中引入使用，如 /pages/order/list.js中 
 ````
 // pages/order/list.js
@@ -76,15 +139,15 @@ Page({
 })
 ````
 
-# helper 函数
+## 接口功能
 
-### 以下函数根据引用方式，可以通过 getApp() 或 vk 进行调用
+**以下函数根据引用方式，可以通过 getApp() 或 vk 进行调用**
 
-# date_format(ns,format='YYYY年MM月DD日')
-将时间戳（整型10位）格式化为format中定义的格式
+> ### date_format(ns,format='YYYY年MM月DD日')
+> 将时间戳（整型10位）格式化为format中定义的格式
 
-format 指令如下：
- YYYY年 MM月 DD日 HH时 II分 SS秒 WEEK周几 DAY(今天/明天/日期)
+format 指令：
+**YYYY年 MM月 DD日 HH时 II分 SS秒 WEEK周几 DAY(今天/明天/日期)**
  
  示例 
  
@@ -97,20 +160,22 @@ format 指令如下：
      
      \`DAY/MM-DD\` 会计算是不是今天或明天，如果不是，则使用MM-DD
  
-### strtotime
-将 日期时间串 转化为时间戳（整型10位）
-getApp().strtotime('2018-11-15 15:24:11') //1542266651
-getApp().strtotime('2018/11/15 15:24:11') //1542266651
+> ### strtotime
+> 将 日期时间串 转化为时间戳（整型10位）
 
-### time
-获取当前时间戳
+    getApp().strtotime('2018-11-15 15:24:11') //1542266651
+    getApp().strtotime('2018/11/15 15:24:11') //1542266651
+
+> ### time
+> 获取当前时间戳
+
 getApp().time() //1542266651
 
-### toast(msg,icon='none')
-getApp().toast('提示信息')   //wx.showToast 的封装
+> ### toast(msg,icon='none')
+> getApp().toast('提示信息')   //wx.showToast 的封装
 
-### cache(key,value,timeout=-1)  
-    带有过期时间的异步存储，需要使用await then 方式；timeout单位是秒， 默认-1为永久存储
+> ### cache(key,value,timeout=-1)  
+> 带有过期时间的异步存储，需要使用await then 方式；timeout单位是秒， 默认-1为永久存储
 
  保存信息： 
  
@@ -136,22 +201,22 @@ getApp().toast('提示信息')   //wx.showToast 的封装
     }catch(e){}
     ````
     
-### cache_clear
+> ### cache_clear
     请将此函数放在 app.js onHide 中，自动清理过期缓存，防止垃圾缓存造成系统负担
     目前wx组件接口不支持getStorageInfo，无法正常工作
     
-### val(e)
-    获取 input/textarea 值，e必须是bind事件传入的event 
+> ### val(e)
+> 获取 input/textarea 值，e必须是bind事件传入的event 
    
-### attr(e,key="")
-    获取 dom 上自定义的data-key="value" 的值，e必须是bind事件传入的event，key 就是 data-key 后面的key，key为空时，返回所有自定义的 data 的键值对数据；
+> ### attr(e,key="")
+> 获取 dom 上自定义的data-key="value" 的值，e必须是bind事件传入的event，key 就是 data-key 后面的key，key为空时，返回所有自定义的 data 的键值对数据；
     
-### http_build_query(param,url='')
+> ### http_build_query(param,url='')
      将 param 键值对拼接成 url 参数，如 key1=val1&key2=val2
      如果传递了 url，则会拼接 url?key1=val1&key2=val2,
      如果 url中已经有 ? 则自动变为 url&key1=val1&key2=val2
      
-### promise(wxapi,param={})
+> ### promise(wxapi,param={})
     微信api promise化，可以使用 then 或 await 进行处理,param 微信api所要传递的参数
     如：网络请求
     getApp().promise('wx.request',{
@@ -165,7 +230,7 @@ getApp().toast('提示信息')   //wx.showToast 的封装
     let sys= await getApp().promise('getSystemInfo');
     console.log(sys)
    
-### requst(param,fouce=false)   
+> ### requst(param,fouce=false)   
     网络请求的封装，实现了
         自动缓存，缓存未失效时，直接使用缓存数据；
         loading 效果，可以通过 config 自定义
@@ -188,8 +253,8 @@ getApp().requst({
     console.log(res);
 })
 ````
-### config(conf={})
-    配置插件，处理数据更加灵活,conf 默认参数如下
+> ### config(conf={})
+> 配置插件，处理数据更加灵活,conf 默认参数如下
 ````
 {
     request:{
@@ -227,7 +292,7 @@ getApp().requst({
 
 
 ````       
-    需要自定义的重写掉就行，其它字段会使用默认值，如：
+> **需要自定义的重写掉就行，其它字段会使用默认值，如：**
 ````
 this.config({
   request:{
@@ -238,12 +303,12 @@ this.config({
   }
 })
 ````    
-### 网络请求 增强版
+> ### 网络请求 增强版
 
     直接使用 getApp().requst 要写一个标准的 url，多个页面调用一个接口无法复用请求，接口很多时不方便管理，接口变更更是麻烦的修改；所以这个增强版是在 getApp().requst 基础上做个一次封装，可以对接口进行配置及统一管理
     
     需要按以下流程实现：
-##### 1）根目录创建 request 目录，创建2个文件
+#### 1）根目录创建 request 目录，创建2个文件
 
 ````
 1. /request/uri.js
@@ -278,7 +343,7 @@ import {request} from 'vktool'
 export default request(uri)
 
 ````
-##### 2）入口 app.js 引入 本地 request 包 
+#### 2）入口 app.js 引入 本地 request 包 
 ````
 // app.js
 import {vk,regeneratorRuntime} from 'vktool'
@@ -303,7 +368,7 @@ App({
   }
 })
 ````
-##### 3）在页面中使用
+#### 3）在页面中使用
 ````
 // uri 中定义的接口全部暴露给了getApp();
 // 可以通过 console.log(getApp()) 看到所有接口
@@ -328,13 +393,13 @@ getApp().ApiOneTwo({key:'free',
     "formids": "plugin://myPlugin/formids"
 }
 ````
-### line
-分割线
+> ### line
+> 分割线
 ````
 <line>分割线</line>
 ````
 ![链接](./docs/line.jpeg)
-### nav
+> ### nav
 ````
 <nav bindback="goBack" hasHome 
     bindhome="goHome" 
@@ -342,8 +407,8 @@ getApp().ApiOneTwo({key:'free',
     color="#f00">VKTOOL NAV</nav>
 ````
 ![链接](./docs/nav.jpeg)
-### formids
-#####为了收集 formid，此组件在点击时会保存 formid 到本地缓存，key为formids
+> ### formids
+> **为了收集 formid，此组件在点击时会保存 formid 到本地缓存，key为formids**
     
 ````
 <formids bindclick="navigateGo">
