@@ -58,21 +58,14 @@ Page({
     })
   },
   request(){
-    getApp().request({
-      url:'http://api.qingyunke.com/api.php?',
-      data:{
-        key:'free',
-        appid:0,
-        msg:this.data.form.keyword
-      },
-      cachetime:this.data.form.cachetime,
-      loading:true,
+    getApp().ApiOneTwo({key:'free',
+      appid:0,
+      msg:this.data.form.keyword
     }).then(res=>{
-      //console.log(res);
       this.setData({
         msg:res.content.replace(/\{br\}/g,"\n"),
         isCache:res.isCache==true
       })
-    })
+    });
   },
 })

@@ -1,0 +1,16 @@
+<!--pages/index/ai.wxml-->
+<nav home="/pages/index/index" backgroundColor="#ff0" color="#f00">网络请求</nav>
+<view class="page">
+    <view class="flex-lr">
+        <view>
+            <view><input placeholder="关键字" bindinput="input" data-key="keyword" value="{{form.keyword}}"/></view>
+            <view class="flex-ll">缓存时间（5秒）已配置到api中,多次点击可体验缓存效果</view>
+        </view>
+        <view>
+            <button bindtap="request">请求</button>
+        </view>
+    </view>
+    <line>请点击请求</line>
+    <textarea style="width: 100%;" disabled auto-height value="{{msg}}"></textarea>
+    <line>{{isCache?'使用缓存':'未使用缓存'}}</line>
+</view>

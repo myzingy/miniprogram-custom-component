@@ -80,7 +80,7 @@ module.exports = {
         method:'POST',
         dataType:'json',
         header:{
-
+          'content-type': 'application/x-www-form-urlencoded'
         },
         responseKey:'Response', //Response 则使用网络请求状态判断，其它值则使用res.StatusKey 进行判断
         responseCode:200,   //正常返回结果 StatusKey的值 == StatusCode 视为正常结果
@@ -95,7 +95,7 @@ module.exports = {
         errorFun:(res)=>{
             this.toast(res[this._config.request.responseKeyMsg])
         },
-        loading:(flag=true)=>{
+        loadFun:(flag=true)=>{
             if(flag){
               wx.showLoading({
                 title: 'loading',
@@ -236,8 +236,10 @@ module.exports = {
      * @returns {*}
      */
     async request(param,fouce=false){
-        if(param.loading && (fouce!='clear' && fouce!='clean')){
-          this._config.request.loading()
+        let conf={...this._config.request,...param};
+        console.log('conf',conf);
+        if(conf.loading && (fouce!='clear' && fouce!='clean')){
+          conf.loadFun()
         }
         let request_url=this.http_build_query(param.data||{},param.url);
         let cache_key=request_url.replace(/http.*\//,'');
@@ -253,8 +255,8 @@ module.exports = {
                     if(typeof cache_data=='object'){
                       cache_data.isCache=true;
                     }
-                      if(param.loading){
-                        this._config.request.loading(false)
+                      if(conf.loading){
+                        conf.loadFun(false)
                       }
                   console.log(request_url,cache_data);
                     return cache_data;
@@ -264,26 +266,30 @@ module.exports = {
             }
 
         }
-        let res=await this.promise('wx.request',param);
+        try{
+          let res=await this.promise('wx.request',conf);
 
-      if(this._config.request.responseKey=='Response'){
-          if(res.data[this._config.request.responseKeyData] && (param.timeout>0 || param.timeout==-1)){
-            this.cache(cache_key,res.data,param.timeout)
-          }
-        }else{
-            if(res.data[this._config.request.responseKey]==this._config.request.responseCode
-                && res.data[this._config.request.responseKeyData]
-                && (param.timeout>0 || param.timeout==-1)
+          if(conf.responseKey=='Response'){
+            if(res.data[conf.responseKeyData] && (param.cachetime>0 || param.cachetime==-1)){
+              this.cache(cache_key,res.data,param.cachetime)
+            }
+          }else{
+            if(res.data[conf.responseKey]==conf.responseCode
+              && res.data[conf.responseKeyData]
+              && (param.timeout>0 || param.timeout==-1)
             ){
-                this.cache(cache_key,res.data,param.timeout)
+              this.cache(cache_key,res.data,param.cachetime)
             }
 
+          }
+          if(conf.loading){
+            conf.loadFun(false)
+          }
+          console.log(request_url,res.data);
+          return res.data;
+        }catch (e){
+          return res.data;
         }
-      if(param.loading){
-        this._config.request.loading(false)
-      }
-      console.log(request_url,res.data);
-        return res.data;
     },
   /**
    * 刷新当前页面

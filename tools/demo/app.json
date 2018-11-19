@@ -2,7 +2,8 @@
   "pages":[
     "pages/index/index",
     "pages/index/demo",
-    "pages/index/ai"
+    "pages/index/ai",
+    "pages/index/ai_request"
   ],
   "window":{
     "navigationStyle": "custom",

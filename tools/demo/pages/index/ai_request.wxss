@@ -1,0 +1,9 @@
+/* pages/index/ai.wxss */
+.page{
+  font-size: 30rpx;
+  width: 90%;
+  margin: 0 5%;
+}
+.page input{
+  border: 1px solid #ccc;
+}

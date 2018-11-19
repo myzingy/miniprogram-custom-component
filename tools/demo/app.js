@@ -1,6 +1,8 @@
 import {vk,regeneratorRuntime} from 'components/vk/index'
+import request from 'request/index'
 App({
   ...vk,
+  ...request,
   regeneratorRuntime:regeneratorRuntime,
   onLaunch: function () {
     this.config({

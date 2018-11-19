@@ -58,4 +58,12 @@
         </formids>
 
     </view>
+    <view class="item">
+        <line>网络请求 request 加强版</line>
+        <view>在getApp().request 的方式了增加了一层，实现api接口配置化处理，更加方便</view>
+        <formids url="./ai_request" openType="navigate">
+            <view class="link">网络请求demo</view>
+        </formids>
+
+    </view>
 </view>
