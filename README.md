@@ -364,4 +364,5 @@ getApp().ApiOneTwo({key:'free',
 3. 请求结果的细化处理
 
 ### 请我喝茶
-![链接](./docs/wxpay.jpg)|![链接](./docs/alipay.png)
+
+|![链接](./docs/wxpay.jpg)|![链接](./docs/alipay.png)|
