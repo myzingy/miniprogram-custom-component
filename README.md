@@ -391,9 +391,9 @@ getApp().ApiOneTwo({key:'free',
 在 Page json中引入组件,用那个就引用那个
 ````
 "usingComponents": {
-    "line": "plugin://myPlugin/line",
-    "nav": "plugin://myPlugin/nav",
-    "formids": "plugin://myPlugin/formids"
+    "line": "/miniprogram_npm/vktool/line",
+    "nav": "/miniprogram_npm/vktool/nav",
+    "formids": "/miniprogram_npm/vktool/formids"
 }
 ````
 > ### line
@@ -403,6 +403,13 @@ getApp().ApiOneTwo({key:'free',
 ````
 ![链接](./docs/line.jpeg)
 > ### nav
+````
+//app.json 请将 navigationStyle 改为 custom
+"window": {
+    "navigationStyle": "custom"
+}
+````
+然后在页面上添加
 ````
 <nav bindback="goBack" hasHome 
     bindhome="goHome" 
