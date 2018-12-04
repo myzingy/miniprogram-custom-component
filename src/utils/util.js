@@ -53,7 +53,7 @@ function date_format(ns,format) {
             }
         }
     }
-    if(format.indexOf('`')>0){
+    if(format.indexOf('`')>-1){
         result=result.replace(/`(.*)\/(.*)`/ig,function($0,$1,$2){
             return $1||$2;
         });
