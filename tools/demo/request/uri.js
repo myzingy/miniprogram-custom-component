@@ -17,6 +17,12 @@ export default {
   //全部使用默认参数
   'AppReserveSmsBuy':null,
 
-
+  //云函数
+  'AppCloudAdd':{
+    alias:'wx.cloud.callFunction', //必须
+    loading:true,       //loading效果 ，默认不带loading;         为 true 时带loading
+    cachetime:5,          //缓存 0无,-1永久,单位秒，一天86400秒;    默认 0 不缓存
+    apiName:'add',     //必须
+  },
 
 }

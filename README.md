@@ -387,6 +387,38 @@ app.ApiOneTwo({key:'free',
   })
 });
 ```` 
+> ### wx.cloud.callFunction
+> 要实现云函数缓存，必须是使用上面的 网络请求 增强版
+在 /request/uri.js 文件中增加云函数的配置
+1. alias:'wx.cloud.callFunction' 必须
+2. apiName 云函数名称    必须
+````
+export default {
+    //__开始为私有属性，不会暴露给getApp
+    '__HOST':'http://api.qingyunke.com/',
+
+    //示例，JS接口名，和服务端接口名称保持一致
+    'ApiOneTwo':{
+      method:'GET',       //支持 wx.requst 的所有参数，在这里都可以重新制定，否则使用app.config()配置的参数；
+        alias:'api.php',  //真实接口地址,外面的key和接口名不一致时可以增加这个；或者服务端改了接口名称，只需要在这里写一个alias即可
+        loading:true,       //loading效果 ，默认不带loading;         为 true 时带loading
+        cachetime:5,          //缓存 0无,-1永久,单位秒，一天86400秒;    默认 0 不缓存
+        host:''             //默认空,使用HOST，可填写为其它host
+    },
+
+    //全部使用默认参数
+    'AppReserveSmsBuy':null,
+    
+    //云函数
+  'AppCloudAdd':{
+    alias:'wx.cloud.callFunction', //必须
+    apiName:'add',      //必须
+    loading:true,       //loading效果 ，
+    cachetime:5,        //缓存 0无
+  },
+}
+````
+
 
 ## 组件库
 在 Page json中引入组件,用那个就引用那个
@@ -438,7 +470,8 @@ app.ApiOneTwo({key:'free',
 1. 请求头 header 中加 formids
 2. 请求出错的处理逻辑实现
 3. 请求结果的细化处理
-4. request 方式支持云开发及云函数，自动缓存
+
+~~ 4. request 方式支持云开发及云函数，自动缓存 ~~
 
 ### 请我喝茶
 ![链接](./docs/wxpay.jpg) | ![链接](./docs/alipay.png) 
