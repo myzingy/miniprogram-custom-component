@@ -34,7 +34,7 @@ function date_format(ns,format) {
         case 6:week="六";break
     }
     result=result.replace('WW',week);
-    if(format.indexOf('DAY')>0){
+    if(format.indexOf('DAY')>-1){
         // 获取当天 0 点的时间戳
         var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)) / 1000;
 
