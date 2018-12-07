@@ -1,11 +1,13 @@
-const {regeneratorRuntime} = getApp()
+const app= getApp()
+const {regeneratorRuntime} = app
 Page({
   data:{
     loading:{},
     dates:[],
+    time:app.time(),
   },
   onLoad: async function() {
-    console.log(getApp());
+    console.log(app);
     // getApp().cache('cache.over','默认是永久缓存');
     // getApp().cache('cache.timeout.5min',{tip:'第三参数是过期时间，单位秒，5分钟就传300'},300);
     // let data= await getApp().cache('cache.over');
@@ -19,16 +21,20 @@ Page({
     //     }
     // })
     let dates=[];
-    let formats=['YYYY年MM月DD日','YYYY==MM==DD','YYYY-MM-DD HH:II:SS','YYYY-MM-DD [周WW] HH:II:SS'];
+    let formats=[
+      'YYYY年MM月DD日','YYYY==MM==DD',
+      'YYYY-MM-DD HH:II:SS','YYYY-MM-DD [周WW] HH:II:SS',
+      '`DAY/MM-DD` 原斜杠(/)变为||','`DAY||MM-DD` HH:II'
+    ];
     formats.forEach(format=>{
       dates.push({
         format:format,
-        val:getApp().date_format(1234567890,format)
+        val:app.date_format(app.time(),format)
       });
     })
     let loc
     try {
-      loc=await getApp().promise('wx.getLocation',{
+      loc=await app.promise('wx.getLocation',{
         type:'gcj02',
       })
     }catch (e){
@@ -45,32 +51,32 @@ Page({
 
   },
   async tapEvent(e){
-    let type=getApp().attr(e,'type');
+    let type=app.attr(e,'type');
     console.log('type',type);
     this.setData({
       [`loading.`+type]:true,
     })
     switch(type){
       case 'cwrite':
-        await getApp().cache('cache.over','这是缓存串，也可以是object');
+        await app.cache('cache.over','这是缓存串，也可以是object');
         break;
       case 'cread':
         try {
           let info=await getApp().cache('cache.over');
-          getApp().toast(info);
+          app.toast(info);
         }catch (e){
-          getApp().toast('没有任何缓存');
+          app.toast('没有任何缓存');
         }
         break;
       case 'cwrite5':
-        await getApp().cache('cache.5s',{info:'我只会缓存5秒'},5);
+        await app.cache('cache.5s',{info:'我只会缓存5秒'},5);
         break;
       case 'cread5':
         try {
-          let data = await getApp().cache('cache.5s');
-          getApp().toast(data.info||'5秒缓存已过期');
+          let data = await app.cache('cache.5s');
+          app.toast(data.info||'5秒缓存已过期');
         }catch (e){
-          getApp().toast('没有任何缓存');
+          app.toast('没有任何缓存');
         }
         break;
     }

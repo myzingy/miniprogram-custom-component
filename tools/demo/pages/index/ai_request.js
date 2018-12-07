@@ -1,5 +1,6 @@
 // pages/index/ai.js
-const {regeneratorRuntime} = getApp()
+const app= getApp()
+const {regeneratorRuntime} = app
 Page({
 
   /**
@@ -18,7 +19,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    console.log('app',app);
   },
 
   /**
@@ -50,15 +51,15 @@ Page({
   },
 
   input(e){
-    let key = getApp().attr(e,'key');
+    let key = app.attr(e,'key');
     let form=this.data.form;
-    form[key]=getApp().val(e)
+    form[key]=app.val(e)
     this.setData({
       form:form,
     })
   },
   request(){
-    getApp().ApiOneTwo({key:'free',
+    app.ApiOneTwo({key:'free',
       appid:0,
       msg:this.data.form.keyword
     }).then(res=>{

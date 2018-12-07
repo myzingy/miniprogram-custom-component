@@ -71,7 +71,7 @@ formids | 自动收集formid 放入本地存储中
 2. 微信开发工具  工具-》构建npm
 ## 基本使用：推荐使用方式 1
 ### 使用方式 1，直接注入 app.js 中
-直接注入到app.js 中，之后通过getApp()方式调用；
+直接注入到app.js 中，之后通过 app 方式调用；
 #### 第一步 在 app.js 引入
 ````
 // app.js
@@ -98,15 +98,16 @@ App({
 #### 第二步 在页面中调用
 ````
 // pages/order/list.js
-const {regeneratorRuntime} = getApp()
+const app= getApp()
+const {regeneratorRuntime} = app
 Page({
   onLoad: async function() {
     console.log(getApp());
-    getApp().cache('cache.over','默认是永久缓存');
-    getApp().cache('cache.timeout.5min',{tip:'第三参数是过期时间，单位秒，5分钟就传300'},300);
-    let data= await getApp().cache('cache.over');
+    app.cache('cache.over','默认是永久缓存');
+    app.cache('cache.timeout.5min',{tip:'第三参数是过期时间，单位秒，5分钟就传300'},300);
+    let data= await app.cache('cache.over');
     console.log('data',data);
-    getApp().requst({
+    app.requst({
         url:'https://www.test.com/?s=App.Reserve.SellerInfo',
         data:{
             seller_id:1,
@@ -154,28 +155,28 @@ format 指令：
  
  示例 
  
-     getApp().date_format(1539588251,'MM-DD HH:II')  //10-15 15:24
+     app.date_format(1539588251,'MM-DD HH:II')  //10-15 15:24
      
-     getApp().date_format(1539588251,'周WEEK MM-DD HH:II')  //周一 10-15 15:24 
+     app.date_format(1539588251,'周WEEK MM-DD HH:II')  //周一 10-15 15:24 
      
-     getApp().date_format(1539588251,'\`DAY/MM-DD\` HH:II')  //今天 15:24  
-     getApp().date_format(1542266651,'\`DAY/MM-DD\` HH:II')  //11-15 15:24 
+     app.date_format(1539588251,'\`DAY||MM-DD\` HH:II')  //今天 15:24  
+     app.date_format(1542266651,'\`DAY||MM-DD\` HH:II')  //11-15 15:24 
      
-     \`DAY/MM-DD\` 会计算是不是今天或明天，如果不是，则使用MM-DD
+     \`DAY||MM-DD\` 会计算是不是今天或明天，如果不是，则使用MM-DD
  
 > ### strtotime
 > 将 日期时间串 转化为时间戳（整型10位）
 
-    getApp().strtotime('2018-11-15 15:24:11') //1542266651
-    getApp().strtotime('2018/11/15 15:24:11') //1542266651
+    app.strtotime('2018-11-15 15:24:11') //1542266651
+    app.strtotime('2018/11/15 15:24:11') //1542266651
 
 > ### time
 > 获取当前时间戳
 
-getApp().time() //1542266651
+    app.time() //1542266651
 
 > ### toast(msg,icon='none')
-> getApp().toast('提示信息')   //wx.showToast 的封装
+> app.toast('提示信息')   //wx.showToast 的封装
 
 > ### cache(key,value,timeout=-1)  
 > 带有过期时间的异步存储，需要使用await then 方式；timeout单位是秒， 默认-1为永久存储
@@ -190,7 +191,7 @@ getApp().time() //1542266651
  
 1. 使用then
     ````
-    getApp().cache('键值').then(data=>{
+    app.cache('键值').then(data=>{
         console.log(data) //数据
     }).catch(res=>{
         //没有找到'键值'对应的数据或数据已失效
@@ -199,7 +200,7 @@ getApp().time() //1542266651
 2. 使用await
     ````
     try{
-        let d=await getApp().cache('键值');
+        let d=await app.cache('键值');
         console.log(data) //数据
     }catch(e){}
     ````
@@ -221,7 +222,7 @@ getApp().time() //1542266651
 > ### promise(wxapi,param={})
     微信 api 简单 promise 化，可以使用 then 或 await 进行处理,param 微信api所要传递的参数
     如：网络请求
-    getApp().promise('wx.request',{
+    app.promise('wx.request',{
         url:'https://www.test.com/api',
         data:{p:1}
     }).then(res=>{
@@ -229,7 +230,7 @@ getApp().time() //1542266651
     });
     
     如：获得系统信息
-    let sys= await getApp().promise('getSystemInfo');
+    let sys= await app.promise('getSystemInfo');
     console.log(sys)
    
 > ### requst(param,fouce=false)   
@@ -239,7 +240,7 @@ getApp().time() //1542266651
         全局错误处理，需要通过 config 配置
 网络请求        
 ````
-getApp().requst({
+app.requst({
     url:'https://www.test.com/?s=App.Reserve.SellerInfo',
     data:{
         seller_id:1,
@@ -306,9 +307,9 @@ this.config({
 })
 ````    
 > ### 网络请求 增强版
-    直接使用 getApp().requst 要写一个标准的 url，多个页面调用一个接口无法复用请求，
+    直接使用 app.requst 要写一个标准的 url，多个页面调用一个接口无法复用请求，
     接口很多时不方便管理，接口变更更是麻烦的修改；
-    所以这个增强版是在 getApp().requst 基础上做个一次封装，可以对接口进行配置及统一管理
+    所以这个增强版是在 app.requst 基础上做个一次封装，可以对接口进行配置及统一管理
     
 需要按以下流程实现：
 #### 1）根目录创建 request 目录，创建2个文件
@@ -324,7 +325,7 @@ export default {
 
     //示例，JS接口名，和服务端接口名称保持一致
     'ApiOneTwo':{
-      method:'GET',       //支持 wx.requst 的所有参数，在这里都可以重新制定，否则使用getApp().config()配置的参数；
+      method:'GET',       //支持 wx.requst 的所有参数，在这里都可以重新制定，否则使用app.config()配置的参数；
         alias:'api.php',  //真实接口地址,外面的key和接口名不一致时可以增加这个；或者服务端改了接口名称，只需要在这里写一个alias即可
         loading:true,       //loading效果 ，默认不带loading;         为 true 时带loading
         cachetime:5,          //缓存 0无,-1永久,单位秒，一天86400秒;    默认 0 不缓存
@@ -373,10 +374,10 @@ App({
 ````
 #### 3）在页面中使用
 ````
-// uri 中定义的接口全部暴露给了getApp();
-// 可以通过 console.log(getApp()) 看到所有接口
+// uri 中定义的接口全部暴露给了app;
+// 可以通过 console.log(app) 看到所有接口
 // uri 接口的key中 (./) 都被替换为空了
-getApp().ApiOneTwo({key:'free',
+app.ApiOneTwo({key:'free',
   appid:0,
   msg:this.data.form.keyword
 }).then(res=>{

@@ -65,8 +65,9 @@ Page({
         appid:0,
         msg:this.data.form.keyword
       },
-      cachetime:this.data.form.cachetime,
+      cachetime:this.data.form.timeout,
       loading:true,
+      method:'GET',
     }).then(res=>{
       //console.log(res);
       this.setData({

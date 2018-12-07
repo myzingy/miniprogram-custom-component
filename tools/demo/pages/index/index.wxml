@@ -18,7 +18,7 @@
     </view>
     <view class="item">
         <line>时间戳格式化</line>
-        <view>时间戳：1234567890</view>
+        <view>时间戳：{{time}}</view>
         <view>
             <view wx:for="{{dates}}" wx:key="dates.key">{{item.format}}=>{{item.val}}</view>
         </view>
@@ -27,7 +27,7 @@
         <line>小程序接口 promise 化</line>
         <view>封装 promise 函数，依然使用小程序接口参数进行传递</view>
         <view style="border: 1px solid #ccc;word-wrap:break-word;">
-            let loc=await getApp().promise('wx.getLocation',{
+            let loc=await app.promise('wx.getLocation',{
                 type:'gcj02',
             })
         </view>
@@ -60,7 +60,7 @@
     </view>
     <view class="item">
         <line>网络请求 request 加强版</line>
-        <view>在getApp().request 的方式了增加了一层，实现api接口配置化处理，更加方便</view>
+        <view>在app.request 的方式了增加了一层，实现api接口配置化处理，更加方便</view>
         <formids url="./ai_request" openType="navigate">
             <view class="link">网络请求demo</view>
         </formids>

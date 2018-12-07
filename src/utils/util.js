@@ -54,7 +54,7 @@ function date_format(ns,format) {
         }
     }
     if(format.indexOf('`')>-1){
-        result=result.replace(/`(.*)\/(.*)`/ig,function($0,$1,$2){
+        result=result.replace(/`(.*)\|\|(.*)`/ig,function($0,$1,$2){
             return $1||$2;
         });
     }
@@ -317,7 +317,51 @@ module.exports = {
           })
       }
 
-  }
+  },
+
+  async cloud(param,fouce=false){
+    let conf={...this._config.request,...param};
+    let request_url=this.http_build_query(data,param.apiName);
+    let cache_key=request_url;
+    if(fouce=='clear' || fouce=='clean'){
+      return this.promise('wx.removeStorage',{key:cache_key})
+    }
+    let cache_data=false;
+    if(!fouce){//从缓存中获取
+      try {
+        cache_data= await this.cache(cache_key)
+        if(cache_data) {
+          if(typeof cache_data=='object'){
+            cache_data.isCache=true;
+          }
+          if(conf.loading){
+            conf.loadFun(false)
+          }
+          console.log(request_url,cache_data);
+          return cache_data;
+        }
+      }catch (e){
+        console.log('cache_data',e)
+      }
+      try{
+        let res=await wx.cloud.callFunction({
+          name:param.name,
+          data:data,
+        });
+
+        if(res.data && (param.cachetime>0 || param.cachetime==-1)){
+          this.cache(cache_key,res.data,param.cachetime)
+        }
+        if(conf.loading){
+          conf.loadFun(false)
+        }
+        console.log(request_url,res.data);
+        return res.data;
+      }catch (e){
+        return res.data;
+      }
+    }
+  },
 }
 
 

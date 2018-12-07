@@ -1,8 +1,8 @@
 /**
  * Created by goto9 on 2018/7/19.
  */
-import util from './util'
 //import regeneratorRuntime from './runtime-module'
+import util from './util'
 
 
 /**
@@ -20,6 +20,12 @@ function rpc(url,data={},fouce=false,req={}){
   req.data=data
   return util.request(req)
 }
+function cloud(apiName,data={},fouce=false,req={}){
+  req.url=apiName
+  req.data=data
+  return util.cloud(req)
+}
+
 function __api(uri){
     //console.log('uri',uri)
     let tmpApi={
@@ -33,9 +39,13 @@ function __api(uri){
       }
       uri[key]=uri[key]||{};
       tmpApi[key.replace(/[\.\/]/g,'')]=function(data,fouce=false,header){
-        //console.log('api[key].host',api[key].host);
-        let url=tmpApi.getUrl(uri[key].alias||key,uri[key].host||uri['__HOST']);
-        return rpc(url,data,fouce,uri[key]);
+        console.log('api[key].host',uri[key].host);
+        if(uri[key].alias=='wx.cloud.callFunction'){
+          return cloud(key,data,fouce,uri[key]);
+        }else{
+          let url=tmpApi.getUrl(uri[key].alias||key,uri[key].host||uri['__HOST']);
+          return rpc(url,data,fouce,uri[key]);
+        }
       }
     }
     //console.log('tmpApi',tmpApi);
