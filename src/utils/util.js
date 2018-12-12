@@ -345,20 +345,19 @@ module.exports = {
       }
       try{
         let res=await wx.cloud.callFunction({
-          name:param.name,
-          data:data,
+          name:param.apiName,
+          data:param.data||{},
         });
-
-        if(res.data && (param.cachetime>0 || param.cachetime==-1)){
-          this.cache(cache_key,res.data,param.cachetime)
+        if(res.result && (param.cachetime>0 || param.cachetime==-1)){
+          this.cache(cache_key,res.result,param.cachetime)
         }
         if(conf.loading){
           conf.loadFun(false)
         }
-        console.log(request_url,res.data);
-        return res.data;
+        console.log(request_url,res.result,param);
+        return res.result;
       }catch (e){
-        return res.data;
+        console.log(e);
       }
     }
   },
