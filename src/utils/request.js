@@ -18,12 +18,12 @@ import util from './util'
 function rpc(url,data={},fouce=false,req={}){
   req.url=url
   req.data=data
-  return util.request(req)
+  return util.request(req,fouce)
 }
 function cloud(apiName,data={},fouce=false,req={}){
   req.url=apiName
   req.data=data
-  return util.cloud(req)
+  return util.cloud(req,fouce)
 }
 
 function __api(uri){
