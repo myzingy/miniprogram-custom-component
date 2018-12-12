@@ -321,7 +321,7 @@ module.exports = {
 
   async cloud(param,fouce=false){
     let conf={...this._config.request,...param};
-    let request_url=this.http_build_query(data,param.apiName);
+    let request_url=this.http_build_query(param.data||{},param.apiName);
     let cache_key=request_url;
     if(fouce=='clear' || fouce=='clean'){
       return this.promise('wx.removeStorage',{key:cache_key})
