@@ -248,7 +248,7 @@ module.exports = {
             return this.promise('wx.removeStorage',{key:cache_key})
         }
         let cache_data=false;
-        if(!fouce){//从缓存中获取
+        if(!fouce && (param.cachetime>0 || param.cachetime==-1)){//从缓存中获取
             try {
                 cache_data= await this.cache(cache_key)
                 if(cache_data) {
@@ -327,38 +327,38 @@ module.exports = {
       return this.promise('wx.removeStorage',{key:cache_key})
     }
     let cache_data=false;
-    if(!fouce){//从缓存中获取
+    if(!fouce && (param.cachetime>0 || param.cachetime==-1)){//从缓存中获取
       try {
-        cache_data= await this.cache(cache_key)
-        if(cache_data) {
-          if(typeof cache_data=='object'){
-            cache_data.isCache=true;
+        cache_data = await this.cache(cache_key)
+        if (cache_data) {
+          if (typeof cache_data == 'object') {
+            cache_data.isCache = true;
           }
-          if(conf.loading){
+          if (conf.loading) {
             conf.loadFun(false)
           }
-          console.log(request_url,cache_data);
+          console.log(request_url, cache_data);
           return cache_data;
         }
-      }catch (e){
-        console.log('cache_data',e)
+      } catch (e) {
+        console.log('cache_data', e)
       }
-      try{
-        let res=await wx.cloud.callFunction({
-          name:param.apiName,
-          data:param.data||{},
-        });
-        if(res.result && (param.cachetime>0 || param.cachetime==-1)){
-          this.cache(cache_key,res.result,param.cachetime)
-        }
-        if(conf.loading){
-          conf.loadFun(false)
-        }
-        console.log(request_url,res.result,param);
-        return res.result;
-      }catch (e){
-        console.log(e);
+    }
+    try{
+      let res=await wx.cloud.callFunction({
+        name:param.apiName,
+        data:param.data||{},
+      });
+      if(res.result && (param.cachetime>0 || param.cachetime==-1)){
+        this.cache(cache_key,res.result,param.cachetime)
       }
+      if(conf.loading){
+        conf.loadFun(false)
+      }
+      console.log(request_url,res.result,param);
+      return res.result;
+    }catch (e){
+      console.log(e);
     }
   },
 }
