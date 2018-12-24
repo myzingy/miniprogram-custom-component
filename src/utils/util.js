@@ -137,7 +137,7 @@ module.exports = {
      * @returns {*}
      */
     cache:async function(key,value,timeout=-1){
-        if(value){
+        if(typeof value!='undefind' && value!=null){
             if(timeout!=-1){
                 timeout=this.time()+timeout
             }
