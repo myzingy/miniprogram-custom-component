@@ -473,10 +473,10 @@ app.AppCloudAdd({x:1,y:2},'clear');
     <view class="link">绑定事件方式跳到 view 页面</view>
 </formids>
 <formids url="./view" openType="navigate">
-    <view class="link">navigate view 页面</view><view>(组件wx.navigateTo有bug，跳不动)</view>
+    <view class="link">navigate view 页面</view>
 </formids>
 <formids url="./view" openType="redirect">
-    <view class="link">redirect view 页面</view><view>(组件wx.redirectTo有bug，跳不动)</view>
+    <view class="link">redirect view 页面</view>
 </formids>
 ````
 
