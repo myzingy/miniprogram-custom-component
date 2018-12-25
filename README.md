@@ -487,6 +487,9 @@ app.AppCloudAdd({x:1,y:2},true).then();
 ### Todo
 
 ~~1. 请求头 header 中加 formids~~
+
 2. 请求出错的处理逻辑实现
+
 3. 请求结果的细化处理
+
 ~~4. request 方式支持云开发及云函数，自动缓存~~
