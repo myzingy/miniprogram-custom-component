@@ -12,6 +12,9 @@ App({
 
         responseKeyData:'content',   //错误信息的key
         responseKeyMsg:'msg',   //错误信息的key
+
+        //hasHeaderFormids:true, //header 请求头是否携带formids(逗号间隔的formid)
+        hasBodyFormids:'__formids', //请求 body 是否携带formids，可以直接指定值作为key；优先 hasHeaderFormids
       }
     })
   },

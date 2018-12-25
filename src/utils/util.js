@@ -82,6 +82,9 @@ module.exports = {
         header:{
           'content-type': 'application/x-www-form-urlencoded'
         },
+        hasHeaderFormids:false, //header 请求头是否携带formids,可以直接指定值作为key
+        hasBodyFormids:false, //请求 body 是否携带formids，可以直接指定值作为key；优先 hasHeaderFormids
+
         responseKey:'Response', //Response 则使用网络请求状态判断，其它值则使用res.StatusKey 进行判断
         responseCode:200,   //正常返回结果 StatusKey的值 == StatusCode 视为正常结果
 
@@ -149,16 +152,21 @@ module.exports = {
                 }
             })
         }else{
+          try{
             let cache=await this.promise('wx.getStorage',{
-                key:key,
+              key:key,
             })
             //console.log('cache',cache.data,cache.data.timeout>this.time())
             if(cache.data.data){
-                if(cache.data.timeout==-1 || cache.data.timeout>this.time()){
-                    return cache.data.data;
-                }
+              if(cache.data.timeout==-1 || cache.data.timeout>this.time()){
+                return cache.data.data;
+              }
             }
-            return false;
+            return "";
+          }catch (e){
+            return "";
+          }
+
         }
     },
     /**
@@ -267,8 +275,18 @@ module.exports = {
 
         }
         try{
+          console.log('hasHeaderFormids',conf.hasHeaderFormids,conf);
+          if(conf.hasHeaderFormids){//header 携带 formids
+            conf.hasHeaderFormids=conf.hasHeaderFormids===true?'formids':conf.hasHeaderFormids;
+            conf.hasBodyFormids=false;
+            let formids=await this.cache('formids');
+            conf.header[conf.hasHeaderFormids]=formids
+          }else if(conf.hasBodyFormids) {//body// 携带 formids
+            conf.hasBodyFormids=conf.hasBodyFormids===true?'formids':conf.hasBodyFormids;
+            let formids=await this.cache('formids');
+            conf.data[conf.hasBodyFormids]=formids
+          }
           let res=await this.promise('wx.request',conf);
-
           if(conf.responseKey=='Response'){
             if(res.data[conf.responseKeyData] && (param.cachetime>0 || param.cachetime==-1)){
               this.cache(cache_key,res.data,param.cachetime)
@@ -345,9 +363,15 @@ module.exports = {
       }
     }
     try{
+      param.data=param.data||{}
+      if(conf.hasBodyFormids) {//body// 携带 formids
+        conf.hasBodyFormids=conf.hasBodyFormids===true?'formids':conf.hasBodyFormids;
+        let formids=await this.cache('formids');
+        param.data[conf.hasBodyFormids]=formids
+      }
       let res=await wx.cloud.callFunction({
         name:param.apiName,
-        data:param.data||{},
+        data:param.data,
       });
       if(res.result && (param.cachetime>0 || param.cachetime==-1)){
         this.cache(cache_key,res.result,param.cachetime)
