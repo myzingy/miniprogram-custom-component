@@ -433,7 +433,7 @@ app.AppCloudAdd({x:1,y:2},true).then();
 ````
 //接口中第二参数为 clear或clean 时，会清理掉此接口缓存；
 //注意第一参数必须一样才能清除
-app.AppCloudAdd({x:1,y:2},true).then();
+app.AppCloudAdd({x:1,y:2},'clear');
 ````
 ## 组件库
 在 Page json中引入组件,用那个就引用那个
