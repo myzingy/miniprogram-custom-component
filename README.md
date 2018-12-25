@@ -264,8 +264,10 @@ app.requst({
         method:'POST',
         dataType:'json',
         header:{
-        
+            'content-type': 'application/x-www-form-urlencoded',
         },
+        hasHeaderFormids:false, //header 请求头是否携带formids,可以直接指定值作为key
+        hasBodyFormids:false, //请求 body 是否携带formids，可以直接指定值作为key；优先 hasHeaderFormids
         responseKey:'Response', //Response 则使用网络请求状态判断，其它值则使用res.responseKey 进行判断
         responseCode:200,   //正常返回结果 responseKey的值 == responseCode 视为正常结果
         
@@ -484,8 +486,7 @@ app.AppCloudAdd({x:1,y:2},true).then();
 
 ### Todo
 
-1. 请求头 header 中加 formids
+~~1. 请求头 header 中加 formids~~
 2. 请求出错的处理逻辑实现
 3. 请求结果的细化处理
-
 ~~4. request 方式支持云开发及云函数，自动缓存~~
