@@ -50,7 +50,6 @@ Component({
         });
       },
       async init(){
-        let wxBarHeight=68;
         let disBack = false;
         let disHome = false;
         let pages=getCurrentPages();
@@ -65,18 +64,24 @@ Component({
             disHome = false;
           }
         }
-        let statusBarHeight=40;
-        try{
-          let system = await vk.promise('wx.getSystemInfo');
-          console.log('system',system);
-          statusBarHeight=system.statusBarHeight
-            *(system.system.toLowerCase().indexOf('ios')>-1?2:system.pixelRatio);
-        }catch(e){}
+        //导航栏自适应
+        let systemInfo = wx.getSystemInfoSync();
+        let reg = /ios/i;
+        let pt = 20;//导航状态栏上内边距
+        let h = 44;//导航状态栏高度
+        if(reg.test(systemInfo.system)){
+          pt = systemInfo.statusBarHeight;
+          h = 44;
+        }else{
+          pt = systemInfo.statusBarHeight;
+          h = 48;
+        }
         this.setData({
-            statusBarHeight: statusBarHeight,
-            disHome: disHome,
-            disBack: disBack,
-            statusBarHeightFull:wxBarHeight + statusBarHeight,
+          statusBarHeight: pt,
+          disHome: disHome,
+          disBack: disBack,
+          statusBarHeightFull: pt + h,
+          titleBarHeight:h,
         })
         console.log('this.setData',this.data);
       },
