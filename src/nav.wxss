@@ -6,7 +6,7 @@
   z-index: 1;
 }
 .nav{
-  font-size: 30rpx;
+  font-size: 34rpx;
   font-weight: bold;
 }
 .nav .part{
@@ -27,11 +27,6 @@
   height: 100%;
   margin-left: 26rpx;
 }
-.nav .part .opt .back-image{
-  height: 32rpx;
-  width: 18rpx;
-}
-.nav .part .opt .home-image{
-  height: 34rpx;
-  width: 36rpx;
+.nav .iconfont{
+  font-size: 40rpx;
 }
