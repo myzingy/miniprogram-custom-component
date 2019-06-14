@@ -54,7 +54,9 @@
         <line>网络请求 request 普通版</line>
         <view>封装了网络请求，可以缓存数据，再次访问加速读取</view>
         <formids url="./ai" openType="navigate">
-            <view class="link">网络请求demo</view>
+            <view class="link">网络请求demo
+                <text style="color:red;">(PubSub:{{num.request}})</text>
+            </view>
         </formids>
 
     </view>
@@ -62,8 +64,14 @@
         <line>网络请求 request 加强版</line>
         <view>在app.request 的方式了增加了一层，实现api接口配置化处理，更加方便</view>
         <formids url="./ai_request" openType="navigate">
-            <view class="link">网络请求demo</view>
+            <view class="link">网络请求demo
+                <text style="color:red;">(PubSub:{{num.requestFast}})</text>
+            </view>
         </formids>
 
+    </view>
+    <view class="item">
+        <line>PubSub 页面间通信</line>
+        <view>在app以及通知页面被通知页面引入 PubSub,PubSub.on 实现监听、PubSub.emit 触发监听</view>
     </view>
 </view>

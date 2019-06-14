@@ -1,8 +1,9 @@
-import {vk,regeneratorRuntime} from 'components/vk/index'
+import {vk,regeneratorRuntime,PubSub} from 'components/vk/index'
 import request from 'request/index'
 App({
   ...vk,
   ...request,
+  PubSub:PubSub,
   regeneratorRuntime:regeneratorRuntime,
   onLaunch: function () {
     this.config({

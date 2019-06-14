@@ -1,10 +1,14 @@
 const app= getApp()
-const {regeneratorRuntime} = app
+const {regeneratorRuntime,PubSub} = app
 Page({
   data:{
     loading:{},
     dates:[],
     time:app.time(),
+    num:{
+      request:0,
+      requestFast:0
+    }
   },
   onLoad: async function() {
     console.log(app);
@@ -45,6 +49,18 @@ Page({
     this.setData({
       dates:dates,
       location:JSON.stringify(loc),
+    })
+    PubSub.on('request',res=>{
+      console.log('PubSub.request',res);
+      this.setData({
+        [`num.request`]:this.data.num.request+1
+      })
+    })
+    PubSub.on('requestFast',res=>{
+      console.log('PubSub.requestFast',res);
+      this.setData({
+        [`num.requestFast`]:this.data.num.requestFast+1
+      })
     })
   },
   onShow(){

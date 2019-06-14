@@ -1,5 +1,5 @@
 // pages/index/ai.js
-const {regeneratorRuntime} = getApp()
+const {regeneratorRuntime,PubSub} = getApp()
 Page({
 
   /**
@@ -74,6 +74,7 @@ Page({
         msg:res.content.replace(/\{br\}/g,"\n"),
         isCache:res.isCache==true
       })
+      PubSub.emit('request',res);
     })
   },
 })

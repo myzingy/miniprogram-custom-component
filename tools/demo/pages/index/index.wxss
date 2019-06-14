@@ -5,7 +5,11 @@
   margin: 0 5%;
 }
 .item{
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-top-width: 0;
+  box-shadow: 0 4px 4px 0 #ccc;
+  padding: 10px;
 }
 .item line{
   margin-bottom: 10px;
