@@ -8,6 +8,8 @@
 
 ~~（之前有以小程序插件方式切入的方式，但由于插件本身wx接口不能完全开放，所以放弃了）~~
 
+以下功能都可在 tools/demo 中看到
+
 ## 接口功能
 
 接口 | 描述 
@@ -52,6 +54,9 @@ cache_clear | 清理过期缓存
 config | 全局配置参数
 ---------------- | --------------
 
+PubSub | 页面间通信
+---------------- | --------------
+
 ## 组件功能
 
 名称 | 描述 
@@ -75,9 +80,10 @@ formids | 自动收集formid 放入本地存储中
 #### 第一步 在 app.js 引入
 ````
 // app.js
-import {vk,regeneratorRuntime} from 'vktool'
+import {vk,regeneratorRuntime,PubSub} from 'vktool'
 App({
   ...vk,
+  PubSub:PubSub,
   regeneratorRuntime:regeneratorRuntime,
   onLaunch: function () {
     this.config({
@@ -123,7 +129,7 @@ Page({
 在单个 Page 中引入使用，如 /pages/order/list.js中 
 ````
 // pages/order/list.js
-import {vk,regeneratorRuntime} from 'vktool'
+import {vk,regeneratorRuntime,PubSub} from 'vktool'
 Page({
   onLoad: async function() {
     console.log(vk);
@@ -352,11 +358,12 @@ export default request(uri)
 #### 2）入口 app.js 引入 本地 request 包 
 ````
 // app.js
-import {vk,regeneratorRuntime} from 'vktool'
+import {vk,regeneratorRuntime,PubSub} from 'vktool'
 import request from 'request/index'
 App({
   ...vk,
   ...request,
+  PubSub:PubSub,
   regeneratorRuntime:regeneratorRuntime,
   onLaunch: function () {
     this.config({
