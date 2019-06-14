@@ -244,6 +244,7 @@ module.exports = {
      * @returns {*}
      */
     async request(param,fouce=false){
+        let stime=new Date();
         let conf={...this._config.request,...param};
         console.log('conf',conf);
         if(conf.loading && (fouce!='clear' && fouce!='clean')){
@@ -266,7 +267,7 @@ module.exports = {
                       if(conf.loading){
                         conf.loadFun(false)
                       }
-                  console.log(request_url,cache_data);
+                  console.log('['+(new Date()-stime)+'ms]'+request_url,cache_data);
                     return cache_data;
                 }
             }catch (e){
@@ -303,7 +304,7 @@ module.exports = {
           if(conf.loading){
             conf.loadFun(false)
           }
-          console.log(request_url,res.data);
+          console.log('['+(new Date()-stime)+'ms]'+request_url,res.data);
           return res.data;
         }catch (e){
           return res.data;

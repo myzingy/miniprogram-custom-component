@@ -13,9 +13,11 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.2.3",
-	"appid": "",
-	"projectname": "miniprogram-demo",
+	"appid": "wx0c86234bafcd8850",
+	"projectname": "wx-vktool-demo",
 	"isGameTourist": false,
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
